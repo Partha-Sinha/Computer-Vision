@@ -79,6 +79,21 @@ class D(nn.Module):
     def forward(self, input):
         output = self.main(input)
         return output.view(-1)
+    
+# Creating the discriminator
+netD = D()
+netD.apply(weights_init)   
+
+# Training the DCGANs
+criterion = nn.BCELoss()
+optimizerD = optim.Adam(netD.parameters(), lr = 0.0002, betas = (0.5, 0.999))
+optimizerG = optim.Adam(netG.parameters(), lr = 0.0002, betas = (0.5, 0.999))
+for epoch in range(25):
+    for i, data in enumerate(dataloader, 0):
+        # Updating the weights of the neura; network of the discriminator
+        
+    
+    
         
     
 
