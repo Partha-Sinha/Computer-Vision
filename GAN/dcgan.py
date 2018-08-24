@@ -57,7 +57,7 @@ class G(nn.Module):
         return output
     
 # Creating the generator
-netG = G()
+netG = G()Generative adversarial networks
 netG.apply(weights_init)
 
 # Defining the discriminator
