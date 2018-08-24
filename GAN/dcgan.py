@@ -91,7 +91,7 @@ optimizerG = optim.Adam(netG.parameters(), lr = 0.0002, betas = (0.5, 0.999))
 for epoch in range(25):
     for i, data in enumerate(dataloader, 0):
         
-        # Updating the weights of the neura; network of the discriminator
+        # Updating the weights of the neural network of the discriminator
         netD.zero_grad() 
         
         # Training the discriminator with a real image of the dataset
@@ -109,8 +109,24 @@ for epoch in range(25):
         errG_fake = criterion(output, target)
         
         # Backpropagating the total error
-        
+        errD = errD_real + errD_fake
+        errD.backward()
+        optimizerD.step()
     
+        # Updating the weights of the neural network of the generator
+        netG.zero_grad()
+        target = Variable(torch.ones(input.size()[0]))
+        output = netD(fake)
+        errG = criterion(output, target)
+        errG.backward()
+        optimizerG.step()
+        
+        # Printing the losses and saving the real images and the generated images
+        
+        
+        
+        
+        
         
     
 
