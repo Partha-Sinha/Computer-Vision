@@ -9,7 +9,7 @@ import torch.optim as optim
 import torch.utils.data
 import torchvision.datasets as dset
 import torchvision.transforms as transforms
-import torchvision.utils as vutlis
+import torchvision.utils as vutils
 from torch.autograd import Variable
 
 # Setting some hyperparameters
@@ -17,7 +17,10 @@ batchSize = 64
 imageSize = 64
 
 # Creating the transformations
-dataset = dset.CIFAR10(root = './data', download = True, transform)
+transform = transforms.Compose([transforms.Scale(imageSize), transforms.ToTensor(), transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5)),])
+
+# Creating the transformations
+dataset = dset.CIFAR10(root = './data', download = True, transform = transform)
 dataloader = torch.utils.data.DataLoader(dataset, batch_size = batchSize, shuffle = True, num_workers = 2)
 
 # Defining the weights_init function that takes as input a neural network m and that will initialize all its weights
@@ -106,7 +109,7 @@ for epoch in range(25):
         fake = netG(noise)
         target = Variable(torch.zeros(input.size()[0]))
         output = netD(fake.detach())
-        errG_fake = criterion(output, target)
+        errD_fake = criterion(output, target)
         
         # Backpropagating the total error
         errD = errD_real + errD_fake
@@ -122,8 +125,11 @@ for epoch in range(25):
         optimizerG.step()
         
         # Printing the losses and saving the real images and the generated images
-        
-        
+        print('[%d/%d][%d/%d] Loss_D: %.4f Loss_G: %.4f' % (epoch, 25 ,i ,len(dataloader), errD.data[0], errG.data[0]))
+        if i % 100 == 0:
+            vutils.save_image(real, '%s/real_samples.png' % "./results", normalize = True)
+            fake = netG(noise)
+            vutils.save_image(fake.data, '%s/samples_samples_epoch_%03d.png' % ("./results", epoch), normalize = True)
         
         
         
